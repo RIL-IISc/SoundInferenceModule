@@ -11,14 +11,26 @@ from collections import defaultdict
 
 from processing.wav2spec import Spectrogram 
 
+import tensorflow as tf 
+from tensorflow.keras.models import Model
+
 
 # Remove path address and retail wav file name
 
 class Create_dataset:
-    def __init__(self, audio_file_dir, x_sound, y_sound):
+    def __init__(self, model_file, audio_file_dir, x_sound, y_sound):
+        self.model_file = model_file
         self.audio_file_dir = audio_file_dir
         self.x_sound = x_sound
         self.y_sound = y_sound
+
+    def get_encoder_model(self):
+
+        model = tf.keras.models.load_model(self.model_file)
+        encoder = Model(inputs=model.input, outputs=model.layers[24].output)
+        
+        return encoder
+
 
     def path_leaf(self, path):
         ntpath.basename("a/b/c/d")
@@ -76,11 +88,21 @@ class Create_dataset:
 
         groups, labels = self.group_data()
         audio_data = defaultdict(list)
+        encoder = self.get_encoder_model()
 
         for sample, list_channel_file in groups.items():
             for audio_file in list_channel_file:
                 spec = Spectrogram(audio_file)
-                audio_data[sample].append(spec.wav2spec())
+
+                spec_channel = spec.wav2spec()
+                spec_channel = np.array(spec_channel)
+                spec_channel = np.expand_dims(spec_channel, axis=0)
+
+                embedding = encoder.predict(spec_channel)
+                embedding = np.squeeze(embedding, axis=0)
+
+
+                audio_data[sample].append(embedding)
                 #print(audio_file)
                 
         return audio_data, labels
@@ -128,7 +150,6 @@ class Create_dataset:
 
     
     
-
 
 
 
