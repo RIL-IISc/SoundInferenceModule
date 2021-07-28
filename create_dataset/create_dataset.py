@@ -114,14 +114,14 @@ class Create_dataset:
         count = 0
 
         for s, list_channel_data in audio_data.items():
-            #count += 1
-            #print(s)
+            count += 1
+            print(s)
             stft_channel1 = list_channel_data[1]
             stft_channel2 = list_channel_data[2]
             stft_channel3 = list_channel_data[3]
             stft_channel4 = list_channel_data[4]
 
-            #print(count)
+            print(count)
 
             stacked_data = np.stack([stft_channel1, stft_channel2, stft_channel3, stft_channel4], axis=-1)
             stacked_audio_spectrograms[s] = stacked_data
