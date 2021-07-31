@@ -17,7 +17,7 @@ from tensorflow.keras.models import Model
 
 # Remove path address and retail wav file name
 
-class Create_dataset:
+class Create_dataset_gan:
     def __init__(self, model_file, audio_file_dir, x_sound, y_sound):
         self.model_file = model_file
         self.audio_file_dir = audio_file_dir
