@@ -18,8 +18,7 @@ from tensorflow.keras.models import Model
 # Remove path address and retail wav file name
 
 class Create_dataset_gan:
-    def __init__(self, model_file, audio_file_dir, x_sound, y_sound):
-        self.model_file = model_file
+    def __init__(self, audio_file_dir, x_sound, y_sound):
         self.audio_file_dir = audio_file_dir
         self.x_sound = x_sound
         self.y_sound = y_sound
@@ -80,7 +79,6 @@ class Create_dataset_gan:
 
         groups, labels = self.group_data()
         audio_data = defaultdict(list)
-        encoder = self.get_encoder_model()
 
         for sample, list_channel_file in groups.items():
             for audio_file in list_channel_file:
